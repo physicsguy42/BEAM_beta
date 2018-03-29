@@ -13,7 +13,7 @@
 
 # Load gcc, MPI compiler, and python interpreter
 
-module load gcc/4.9.4
+module load gcc/4.9.3
 module load mpi-sgi/mpt.2.15r20  # most current version of sgi mpt
 module load python/2.7.12         # load python 2.7 interpreter
 
@@ -33,7 +33,7 @@ set shaparam=sha100
 set prefile=mc-beamS0Phase
 # LitGeom suffix means both sun and observer are on the same side of ring plane
 set postfile=${optdepth}${density}LitGeom.in 
-set beamDir=$(pwd)    # set base directory for beam software
+set beamDir=`pwd`   # set base directory for beam software
 set MAXITER=300 # set upper limit of loop
 
 cd /home1/dmolson/Radiative_transfer/MonteCarlo/

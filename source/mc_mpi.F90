@@ -1559,7 +1559,7 @@ subroutine output ()
   
   open(40, file='if.out', status='replace')
   
-  if(phasefunc == 6 .or phasefunc == 7) then
+  if(phasefunc == 6 .or. phasefunc == 7) then
       write (40,*) 'Curly R     I/F(total)  I/F(solar)   I/F(saturn)'
   else
       write (40,*) 'albedo      I/F(total)  I/F(solar)   I/F(saturn)'

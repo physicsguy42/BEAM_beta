@@ -230,7 +230,7 @@ Running the model,
       Most higher end Macs have 2 to 8 cores so the parallel version can be run locally by first 
       linking the input file to a hardcoded filename,
          
-         >ln -s ../input/mc-beamS0Phase60sha45tau05D001LitGeom.in input_file.in      
+         >ln -s ../input/mc-mc-beamS0Phase20sha100tau10D01LitGeom.in input_file.in      
       
       and then executing the code as,
       
@@ -248,7 +248,7 @@ running the model on Pleidies,
       So after compiling both codes on NAS one can execute the sample pbs script in the root 
       directory as,
       
-      >qsub -q normal run_mpi4_S0tau05D001Phase60sha45Ntarg300.pbs
+      >qsub -q normal run_mpi4_S0tau10D01Phase20sha45Ntarg300.pbs
       
       this puts the "job" into the normal queue. This is for jobs that take 
       less then 8 hours to run. 
