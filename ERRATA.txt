@@ -1,0 +1,42 @@
+BEAM errata March 28, 2018
+
+Although much care has been taken in development and testing 
+of this software package there some combinations of parameters
+that have not been thouroughly tested. This includes but is not 
+limited to,
+
+    Satshine
+       -BEAM includes the capability to include the contribution 
+       of photons originating from Saturn's surface (Solar photons 
+       scattered by Saturn onto the rings). Although this feature 
+       appears qualitatively consistant with expectations we have 
+       not performed any tests that specifically target this feature.
+       
+    wakes
+       - The granola model implemented in the set up code (either in 
+       make_particles_wakes.F90 or mpw_iquad_xy.f90) includes the capabilty 
+       to build particle field with self-gravity wakes. Although have generated 
+       particle files with wakes (and done validation with these), we have 
+       not run the BEAM MC code with targets with wakes.
+       
+    wake orientation
+       - On a related note for wakes there is a parmeter that determines
+       the orientation relative to the radial direction in the ring plane.
+       We have gerated a few particle files with a non-zero "wake orientation"
+       and using visualization tools the ring patch looks as we would expect. 
+       But as above we have not used such targets with the MC code.
+    
+    Shadowing
+       - One of the BEAM software's big advantages over similar codes is 
+       using a Hapke model to simulate particle surface shadowing (as opposed 
+       to intra-particle shadowing). We have done some testing of this feature 
+       and it seems consistant with the theory. 
+    
+    Particle Phase functions
+       - The MC code has branches of the code that use facet (aka surface
+       element) scattering to calulate flux and scattering direction for 
+       each event where a photon hits a particle. There are other branches
+       of the code that use particle phase functions. While facet scattering 
+       has been thoroughly tested, at this writing the particle phase function
+       branches are being debugged and tested. 
+           

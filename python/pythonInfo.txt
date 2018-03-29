@@ -1,0 +1,74 @@
+D.M. Olson 3/22/18 
+
+Preliminaries: Python
+---------------------
+The short version:
+------------------
+Python is a versatile programming language that comes 
+preinstalled on many platforms (MacOS X 10.7 and above,
+most recent Linux distributions). To check if you have it
+go to a unix prompt (open the terminal app if on a Mac) and type 
+python or python3. You should get something like this,
+    >python3
+	Python 3.6.4 (v3.6.4:d48ecebad5, Dec 18 2017, 21:07:28) 
+	[GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
+	Type "help", "copyright", "credits" or "license" for more information.
+
+python specialized modules that contain some high level functions. The scripts 
+included in this package use the numpy, scipy, and matplotlib modules. 
+They may or not come with the version of python you have installed. 
+The best way to make sure they are present is to try installing them 
+Fortunately, that can be done using pip in one command in unix,
+
+> python -m pip install --user numpy scipy matplotlib
+
+or 
+
+> python3 -m pip install --user numpy scipy matplotlib
+
+Longer version
+--------------
+the code in this package is written in python. 
+This language comes preinstalled on some OS platforms
+however if you do not have it on you system it can easily 
+be installed. There are basic installers available from the python 
+Software Foundation,
+
+https://www.python.org/downloads/
+
+Some python scripts require specialized libraries to work. This code 
+uses the libraries numpy (includes tools for using numeric arrays in python) 
+and scipy (includes fuctions used for scientific computing in python) and 
+matplotlib (MATLAB like plotting library). 
+These need to be installed seperately after getting python set up.
+
+This page provides resources for installing numpy and scipy libraries,
+
+https://www.scipy.org/scipylib/download.html
+
+But I found the easist way to install and update these libraries is using pip,
+
+> python -m pip install --user numpy scipy matplotlib
+
+The utility pip is included with python version 2.7 and onword. 
+
+There are also 3rd party distributions of python that come with any library 
+you might need such as,
+
+Anaconda
+https://www.anaconda.com/distribution/
+
+Enthought 
+https://www.enthought.com/product/canopy/    (full IDE, not free but there is a trial version)
+
+https://www.enthought.com/product/enthought-deployment-manager/ (command line version)
+
+I have used Enthought (commandline version) but have no experience with Anacoda
+and don't know how well it works. But it is widely adopted. There are others but 
+these two are available on multiple OS platforms (Mac/Win/Linux).
+
+Although you don't really need to know anything about python (hopefully) to run 
+my scripts the Python Software Foundation has a good set of tutorials if you want 
+to learn more.
+
+https://docs.python.org/3/tutorial/

@@ -1,0 +1,15 @@
+nowakes_D01_tau10_nbins40.partdat
+0               # 1 for wakes, 0 for no wakes
+40              # number of bins
+0.1 1.0       # D, tau
+5 500           # MIN AND MAX PARTICLE RADII IN CM
+1               # 0=UNIFORM, 1=GAUSSIAN
+1.0             # expansion factor
+
+
+
+
+
+
+
+
