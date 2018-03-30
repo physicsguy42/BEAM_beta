@@ -59,7 +59,7 @@ This package contains
 
 	README.txt 
 	   -this file
-	ERRATA.txt   
+	in_progress.txt   
 	   - Document that details features of the software still being tested
 	   
 	run_mpi4_S0tau05D001Phase60sha45Ntarg300.pbs 
@@ -174,7 +174,7 @@ Compiling code,
     
     On NAS you will need to load a couple of modules first. As of this wring they are,
     
-      >module load gcc/4.9.4
+      >module load gcc/4.9.3
       >module load mpi-sgi/mpt.2.15r20
 
     to compile MPI code type,
