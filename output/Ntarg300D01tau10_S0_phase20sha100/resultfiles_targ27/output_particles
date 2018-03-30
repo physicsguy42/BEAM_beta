@@ -1,0 +1,51 @@
+ Enter name for particle file ending with .partdat:
+ partdat = nowakes_D01_tau10_nbins40.partdat                                                                   
+ filename = /nobackupp8/dmolson/Ntarg300D01tau10_S0_phase20sha100/nowakes_D01_tau10_nbins40.partdat                                                                                                                 
+ Include wakes? no wakes=0, wakes=1:
+ iwake=            0
+ number of bins : 
+ Enter D and tau:
+ Enter min and max particle radii in cm:
+ Vertical distribution: 0=uniform, 1=Gaussian:
+ Enter an expansion factor for the length of ring patch:
+ number of bins :          40   1.1220184543019633        5.0000000000000000        500.00000000000000     
+ s1, s2 :    472.03043814296177        529.62686258864449     
+ l (in cm):   5598.8063034892357     
+ h:   1433.1717902807306     
+ tau:   1.0000000000000000     
+ d:  0.10000000000000001     
+ npart:       43329
+ Writing to /nobackupp8/dmolson/Ntarg300D01tau10_S0_phase20sha100/nowakes_D01_tau10_nbins40.partdat
+ overlapping particles for quad           1  =         277
+ overlapping particles for quad           2  =          43
+ overlapping particles for quad           3  =          49
+ overlapping particles for quad           4  =          37
+ overlapping particles for quad           5  =          39
+ overlapping particles for quad           6  =         135
+ overlapping particles for quad           7  =          60
+ overlapping particles for quad           8  =          91
+ overlapping particles for quad           9  =          62
+ overlapping particles for quad          10  =          26
+ overlapping particles for quad          11  =         299
+ overlapping particles for quad          12  =          53
+ overlapping particles for quad          13  =          52
+ overlapping particles for quad          14  =         100
+ overlapping particles for quad          15  =         141
+ overlapping particles for quad          16  =          78
+ overlapping particles for quad          17  =          78
+ overlapping particles for quad          18  =          61
+ overlapping particles for quad          19  =          27
+ overlapping particles for quad          20  =         445
+ overlapping particles for quad          21  =          71
+ overlapping particles for quad          22  =          42
+ overlapping particles for quad          23  =         223
+ overlapping particles for quad          24  =          18
+ overlapping particles for quad          25  =          55
+ overlapping particles for quad          26  =          30
+ overlapping particles for quad          27  =         930
+ overlapping particles for quad          28  =          80
+ overlapping particles for quad          29  =          58
+ overlapping particles for quad          30  =         110
+ overlapping particles for quad          31  =         151
+ overlapping particles for quad          32  =         126
+ rotating particles for wake orientation...

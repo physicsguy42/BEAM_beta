@@ -1,0 +1,60 @@
+ part file = nowakes_D01_ta input variables
+ Write debug file? 1 = yes, 0 = no
+ debug =            0
+ Enter nbr of photons from sun:
+ nphot =        10000
+ Enter sun latitude:
+ sunlat =    26.699999999999999     
+            0       10000  0.46600291028248553       0.72780229808163477       0.34906585039886556        1.7453292519943278        0.0000000000000000     
+ Enter ID nbr for particle phase function :
+ 3 = Power-law spherical phase function for Callisto (n=3.301)
+ 4 = Power-law spherical phase function for Europa
+ 6 = Shadowed-Minnaert surface reflection law - John table
+ 7 = Shadowed-Lambert surface reflection law
+ 8 = Shadowed-Lambert point particle phase function
+ these number codes are adopted for historical reasons
+ k, S =    1.0000000000000000        0.0000000000000000     
+ What phase func for Saturn?
+ 1 = Barkstrom Law with tabulated A & B
+ 2 = Barkstrom Law with user-chosen A & B
+ 3 = Minnaert
+ Barkstrom A ~ Saturn albedo
+ Barkstrom B ~ amount of backscatter
+  2799.4031517446178     
+ ymin,ymax:   -2799.4031517446178        2799.4031517446178     
+ zmin,zmax:   -1591.4713398151018        1565.4206619214015     
+ Initialize grid set-up for ring partcles..
+           0       10000  0.46600291028248553       0.72780229808163477       0.34906585039886556        1.7453292519943278        0.0000000000000000     
+ Enter ID nbr for particle phase function :
+ 3 = Power-law spherical phase function for Callisto (n=3.301)
+ 4 = Power-law spherical phase function for Europa
+ 6 = Shadowed-Minnaert surface reflection law - John table
+ 7 = Shadowed-Lambert surface reflection law
+ 8 = Shadowed-Lambert point particle phase function
+ these number codes are adopted for historical reasons
+ Enter Minnaert parameter k to use:
+ Enter steepness parameter to use:
+ k, S =    1.0000000000000000        0.0000000000000000     
+ Solar photons on? 0 = off, 1 = on, default = 1
+ solarswitch =            1
+ Saturnshine? 0 = off, 1 = on, default = 0
+ satswitch =            1
+ Enter nbr of Saturnshine photons:
+ Enter nbr of lat/long grids on facing Saturn hemisphere:
+ (min should be 10 x 10)
+ Enter distance of ring calculation area from Saturn center in km:
+ Calculating planar albedo (APF)...
+ What phase func for Saturn?
+ 1 = Barkstrom Law with tabulated A & B
+ 2 = Barkstrom Law with user-chosen A & B
+ 3 = Minnaert
+ Barkstrom A ~ Saturn albedo
+ Barkstrom B ~ amount of backscatter
+ Total sat photons:   168.12553935111004     
+ Begin ray tracing of SATSHINE photons...
+ lower, upper :            1         357
+ Begin ray tracing of SOLAR photons...
+ nphot =        10000
+ Solar iphot =         100
+ Solar iphot =         200
+ Solar iphot =         300
