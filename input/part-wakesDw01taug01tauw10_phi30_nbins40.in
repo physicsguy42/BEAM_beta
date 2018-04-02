@@ -8,4 +8,4 @@ wakes_Dw01taug01tauw10_phi30_nbins40.partdat
 30.0             # orientation angle of wakes
 5 500           # MIN AND MAX PARTICLE RADII IN CM
 1               # 0=UNIFORM, 1=GAUSSIAN
-1.0             # expansion factor
+1.0             # expansion factor   
