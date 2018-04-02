@@ -1205,7 +1205,7 @@ subroutine input ()
   do
      if (rank == 0) write (25,*) 'Enter name of file containing particle positions'
      read (15,'(a)') infile
-     write(25,*) 'part file = ', infile
+     if (rank == 0) write(25,*) 'part file = ', infile
      inquire (file=infile, exist=test)
      if (test) exit
      if (rank == 0) write (25,'(/,a)') 'File not found. Check the file name and path.'
@@ -2501,7 +2501,7 @@ subroutine satshine ()
 
      ! START RAY TRACING FOR SATSHINE PHOTONS
 
-     if(mod(i,1000).eq.0) then
+     if(mod(i,100).eq.0) then
         if(rank==0) write(25,*) 'Satshine iphot =',i
      endif
 
