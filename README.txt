@@ -351,7 +351,11 @@ running shell script,
       
       > ./runTau10D01S0_Phase20_50targs.sh
       
-      While running the script echos the progress as it goes through each run. 
+      While running, the script echos the progress as it goes through 
+      each run. As with the PBS script, this script first creates a 
+      parent folder for the results with a subfolder for the results 
+      from individual runs. An example of output can be found in 
+      /output/BEAM_tau10D01S0Phase20SHA100Rev3_50targs. 
       
       
       
