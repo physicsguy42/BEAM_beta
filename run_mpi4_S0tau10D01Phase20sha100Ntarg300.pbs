@@ -25,7 +25,7 @@ module load python/2.7.12         # load python 2.7 interpreter
 # the particle setup code can be compiled directly with gfortran
 # gfortran -O3 make_particles_wakes.F90 -o ../bin/wakex
 
-# define some parameters to form input filename
+# define some parameters to form input filenames and destination directory
 set alpha=20
 set density=D01
 set optdepth=tau10
