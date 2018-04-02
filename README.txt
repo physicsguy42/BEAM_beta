@@ -324,7 +324,6 @@ running the model on Pleidies,
       The beginning of the code has some shell variable declarations used 
       form input filenames and output directories. 
       
-      
       So after compiling both codes on NAS one can execute the sample pbs script in the root 
       directory as,
       
@@ -355,7 +354,7 @@ running shell script,
       each run. As with the PBS script, this script first creates a 
       parent folder for the results with a subfolder for the results 
       from individual runs. An example of output can be found in 
-      /output/BEAM_tau10D01S0Phase20SHA100Rev3_50targs. 
+      /output/BEAM_tau10D01S0Phase20SHA100Rev3_50targs.
       
       
       
