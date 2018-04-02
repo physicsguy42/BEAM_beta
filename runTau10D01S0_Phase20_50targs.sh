@@ -4,6 +4,7 @@
 # set up code (make_particles_wakes.f90 or mpw_iquad_xy.f90) 
 # and Monte Carlo code (mc.F90)
 # see the README.txt for more information
+# define some parameters to form input filenames and destination directory
 alpha=20
 shaparam=100
 prefile=mc-beamS0Phase
