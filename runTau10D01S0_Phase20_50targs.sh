@@ -6,7 +6,7 @@
 # see the README.txt for more information
 # define some parameters to form input filenames and destination directory
 alpha=20
-shaparam=100
+shaparam=100 
 prefile=mc-beamS0Phase
 # LitGeom suffix means both sun and observer are on the same side of ring plane
 postfile=LitGeom.in
