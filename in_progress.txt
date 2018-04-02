@@ -1,4 +1,4 @@
-BEAM errata March 28, 2018
+BEAM errata March 31, 2018
 
 Although much care has been taken in development and testing 
 of this software package there some combinations of parameters
