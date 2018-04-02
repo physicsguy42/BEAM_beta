@@ -36,7 +36,7 @@ limited to,
        - The MC code has branches of the code that use facet (aka surface
        element) scattering to calulate flux and scattering direction for 
        each event where a photon hits a particle. There are other branches
-       of the code that use particle phase functions. While facet scattering 
+       of the code that instead use a particle phase functions. While facet scattering 
        has been thoroughly tested, at this writing the particle phase function
        branches are being debugged and tested. 
            

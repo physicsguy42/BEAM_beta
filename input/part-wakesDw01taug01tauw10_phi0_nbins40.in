@@ -1,0 +1,11 @@
+wakes_Dw01taug01tauw10_phi0_nbins40.partdat
+1               # 1 for wakes, 0 for no wakes
+40              # number of bins
+1.0             # tau of wake
+0.1             # tau of gap
+0.05             # D of wake
+0.1 1.0        # h/w and s/w
+0.0             # orientation angle of wakes
+5 500           # MIN AND MAX PARTICLE RADII IN CM
+1               # 0=UNIFORM, 1=GAUSSIAN
+1.0             # expansion factor

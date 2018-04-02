@@ -26,7 +26,7 @@ cp ${home1}/input/flux_sum.out .
 #loop over targets
 for iter in `seq 1 $MAXTARGETS`; do 
 echo $iter
-setup=$home1/bin/wakex_xy
+setup=$home1/bin/wakex
 part_input=${home1}/input/part-no_wakes${density}${optdepth}_${binParm}.in
 echo ${part_input}
 ${setup} < ${part_input} > part_output

@@ -209,14 +209,12 @@ include 'mpif.h'
 
 comm = MPI_COMM_WORLD  ! default communicator setup for MPI_Init()
 
+
 call MPI_INIT(ierror)
-write(25,*) 'ierror = ', ierror
 ! Below each processor finds out what what rank it is
 call MPI_COMM_RANK(comm,rank,ierror)
-write(25,*) 'ierror = ', ierror
 ! Tell each processor how many processors are being used
 call MPI_COMM_SIZE(comm,nproc,ierror)
-write(25,*) 'ierror = ', ierror
 
 open(unit=15, file = 'input_file.in',status='old')
 open(unit=25,file='output',status='unknown')
@@ -1149,7 +1147,7 @@ subroutine input ()
   tempRatio = (cos(alpha) - sin(obslat) * sin(sunlat)) / &
        & (cos(obslat) * cos(sunlat))
        
-  if ( abs(tempRatio) .gt. 1 ) then
+  if ( abs(tempRatio) .gt. 1.0d0 ) then
       if (rank == 0) then
         write(25,*) '**unable to find the azimuthal angle**'
         write(25,*) '**between incident and emitted ray**'
@@ -1302,13 +1300,13 @@ subroutine input ()
   end if
 
   if (phasefunc == 7) then
-     write(*,*)'Enter steepness parameter to use:'
+     write(25,*)'Enter steepness parameter to use:'
      read(*,*)steep
 
   end if
 
   if (phasefunc == 8) then
-     write(*,*)'Enter steepness parameter to use:'
+     write(25,*)'Enter steepness parameter to use:'
      read(*,*)steep
      call init_power()
 
