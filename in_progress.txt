@@ -1,4 +1,4 @@
-BEAM errata March 31, 2018
+BEAM errata May 7, 2018
 
 Although much care has been taken in development and testing 
 of this software package there some combinations of parameters
@@ -31,12 +31,4 @@ limited to,
        using a Hapke model to simulate particle surface shadowing (as opposed 
        to intra-particle shadowing). We have done some testing of this feature 
        and it seems consistant with the theory. 
-    
-    Particle Phase functions
-       - The MC code has branches of the code that use facet (aka surface
-       element) scattering to calulate flux and scattering direction for 
-       each event where a photon hits a particle. There are other branches
-       of the code that instead use a particle phase functions. While facet scattering 
-       has been thoroughly tested, at this writing the particle phase function
-       branches are being debugged and tested. 
            

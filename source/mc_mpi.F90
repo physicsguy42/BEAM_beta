@@ -457,7 +457,9 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
      endif    
   endif   
   
-  dmu0 = 1.0d0/dble(nmu0-1)
+  dmu0 = 1.0d0/dble(nmu0-1) !grid scacing in mu0, used to get correct value 
+                            !of apf for weighting in case of facet 
+                            ! (aka surface element) scattering. 
 
   if (idebug == 1) then
      open (30, file='debug.out', access='append')
@@ -469,7 +471,36 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
  
   p_copy = p
 
-! IGNORE THIS PHOTON IF OBSERVER IS HIDDEN BY ANOTHER PARTICLE
+! CALCULATE COMPONENTS OF UNIT NORMAL VECTOR FROM CURRENT PARTICLE
+! POSITION TO CENTER OF PHOTON
+
+  n(1:3) = p(1:3) - p_part(1:3,inow)
+  n2 = dot_product(n,n)
+  n = n / sqrt(n2)
+
+! IGNORE THIS SCATTERING EVENT IF OBSERVER IS HIDDEN BY SCATTERING PARTICLE ITSELF
+! ONLY IN FACET SCATTERING CASE
+
+! For surface element scattering, if mu < 0 the scattering point is not visible 
+! to the observer. So we do not calculate flux for any scattering event 
+! for any of these cases.
+
+! For particle phase functions the scattering particle is treated like a point
+! (althought scattering is done on the surface rather then the particle's 
+! center) so the observer will still recieve the flux. 
+
+  mu = dot_product(n,e_obs)
+  if(phasefunc == 6 .or. phasefunc == 7) then
+    if (mu < 0) then
+      numrejects = numrejects +1
+      return
+     endif    
+  endif   
+  mu0 = dot_product(-e,n)
+  
+! IGNORE THIS SCATTERING EVENT IF OBSERVER IS HIDDEN BY ANOTHER PARTICLE
+! We use which_part_next() with e=e_obs to determine if there is 
+! a particle in the way of the observer seeing the flux.
 
   call which_part_next (p_copy,e_obs,inext,tnext,nscatter)
 
@@ -479,7 +510,15 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
      close(30)
   endif
 
-  if (inext > 0) then
+! inext is the index of the particle that would be in the way 
+! of the observer seeing the flux from the photon. A negative value 
+! for inext means there is no ring particle in the way. If inext is 
+! positive there is a obstruction between photon and observer. The index 
+! of particle the photon is "sitting on" is inow. It is posible to get 
+! inext equal to inow. However, this is the same as the check above for 
+! "self-blocking" (mu < 0) so we filter out that case. 
+
+  if ((inext > 0) .and. (inext .ne. inow)) then
      if (idebug == 1) then
         open (30, file='debug.out', access='append')
         write (30,*) 'scattering pt hidden from observer'
@@ -488,21 +527,6 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
      return
   endif
 
-! CALCULATE COMPONENTS OF UNIT NORMAL VECTOR FROM CURRENT PARTICLE
-! POSITION TO CENTER OF PHOTON
-
-  n(1:3) = p(1:3) - p_part(1:3,inow)
-  n2 = dot_product(n,n)
-  n = n / sqrt(n2)
-
-! IGNORE THIS PHOTON IF OBSERVER IS HIDDEN BY SCATTERING PARTICLE ITSELF
-
-  mu = dot_product(n,e_obs)
-  if (mu < 0) then
-      numrejects = numrejects +1
-      return
-  endif    
-  mu0 = dot_product(-e,n)
 
   if (idebug == 1) then
      open (30, file='debug.out', access='append')
@@ -514,8 +538,7 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
   calpha = dot_product(e_obs, -e)
   
   alphanew = acos(calpha)
-
-!  talpha2 = tan(alpha/2.d0)
+  
   talpha2 = tan(alphanew/2.d0)
   sta2 = sqrt(talpha2)
   if(nscatter > 1) then
@@ -641,8 +664,7 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
      if (satswitch == 1) then
         fluxsat(nscatter) = fluxsat(nscatter) + sf
      else
-        flux(nscatter) = flux(nscatter) + sf
-                   
+        flux(nscatter) = flux(nscatter) + sf                   
      end if
 
   else if (phasefunc == 7) then
@@ -668,15 +690,13 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
      endif
      Palpha = (8.0/(3*pi))*(sin(alphanew)+(pi-alphanew)*cos(alphanew))
      sf = (c_S(ishad)/(4*pi))*exp(-1.d0 * steep * sta2)*Palpha*weight(nscatter)
-
+     
      if (satswitch == 1) then
         fluxsat(nscatter) = fluxsat(nscatter) + sf
      else
         flux(nscatter) = flux(nscatter) + sf
-
      end if
-     
-  endif
+  end if    
   
      if (idebug == 1) then
         open (30, file='debug.out', access='append')
@@ -1053,9 +1073,8 @@ subroutine initialize ()
   numfluxSat = 0
   numfluxSolar = 0
   
-  
-! Added by D. Olson April 2015 to ensure we get a unique seed everytime code 
-! is executed 
+! to ensure we get a unique seed everytime code is executed 
+! we base it on system time.
   
   if (iflag .eqv. .true. ) then
 	  call system_clock(time_temp)
@@ -1250,7 +1269,6 @@ subroutine input ()
   call init_grid_speedup()
 
 ! CHOOSE PHASE FUNCTION AND CALCULATE FLUX TO OBSERVER
-  write(25,*) idebug,nphot, sunlat, obslat,alpha,sha,phiwake
 
   write(25,*)'Enter ID nbr for particle phase function :'
   write(25,*)'3 = Power-law spherical phase function for Callisto (n=3.301)'
@@ -1295,7 +1313,6 @@ subroutine input ()
      read(15,*)k
      if(rank==0) write(25,*)'Enter steepness parameter to use:'
      read(15,*)steep
-     write(25,*) 'k, S = ', k, steep
 
   end if
 
@@ -1592,7 +1609,7 @@ subroutine output ()
   write(60,*) 'nbr of noninteracting Solar photons : ', nphotpassSolar    
   write(60,*) 'nbr of Satshine photons used for flux: ', numfluxSat
   write(60,*) 'nbr of Solar photons used for flux: ', numfluxSolar  
-  write(60,*) 'number of rejected photons : ', numrejects
+  write(60,*) 'number of blocked scattering events : ', numrejects
 
   close(60)
   return
@@ -1695,8 +1712,8 @@ subroutine ray_tracing ()
            close(30)
         endif
 
-        call scatter_phot (p,e,inext,tnext)
-
+        call scatter_phot (p,e,inext,tnext,nscatter)
+        
         if (idebug == 1) then
            open (30, file='debug.out', access='append')
            write (30,*) 'Direction after  scatter: ',e(1:3)
@@ -2562,7 +2579,7 @@ subroutine satshine ()
            close(30)
         endif
 
-       call scatter_phot (p,e,inext,tnext)
+       call scatter_phot (p,e,inext,tnext,nscatter)
 
        if (idebug == 1) then
           open (30, file='debug.out', access='append')
@@ -2584,11 +2601,11 @@ end subroutine satshine
 
 !--------------------------------------------------------------------
 ! SCATTER_PHOT(P,E,INEXT,TNEXT):
-! SCATTER PHOTON - DETERMINE NEW POSITION AND DIRECTION OF PHOTON 
+! SCATTER PHOTON - DETERMINE NEW DIRECTION OF PHOTON 
 ! AFTER SCATTERING FROM PARTICLE
 !--------------------------------------------------------------------
 
-subroutine scatter_phot (p,e,inext,tnext)
+subroutine scatter_phot (p,e,inext,tnext,nscatter)
   use variables
   implicit none
   include 'mpif.h'  
@@ -2611,6 +2628,8 @@ subroutine scatter_phot (p,e,inext,tnext)
   real*8 :: cosi,sini ! COS AND SIN OF INCIDENT ANGLE
   real*8 :: alp ! ALPHA FROM POWER-LAW TABLE INTERPOLATION
   real*8 :: enew(3),enew2 ! COPY OF E POST-SCATTERING
+  integer :: nscatter
+  real*8 :: cosalp, sinalp
 
 ! PHASEFUNC = 7: USING LAMBERT SURFACE ELEMENT REFLECTION LAW
 
@@ -2713,32 +2732,34 @@ subroutine scatter_phot (p,e,inext,tnext)
            alp = ( power_alpha(i) * (temp - power_rand(i-1)) - &
                 & power_alpha(i-1) * (temp - power_rand(i)) ) / &
                 & ( power_rand(i) - power_rand(i-1) )
-           
-! USING SPHERICAL TRIANGLE RELATIONS TO SOLVE FOR COSE, GIVEN ALPHA
-           
-           cose = cosi * cos(alp) + sini * sin(alp) * cospsi
-           sine = sqrt(1.d0  -  cose * cose)
 
+
+                      
            if (idebug == 1) then
               open (30, file='debug.out', access='append')
-              write(30,*)'alp, cose, sine: ',alp,cose,sine
+              write(30,*)'alp, cosalp, sinalp: ',alp,cosalp,sinalp
               close(30)
            endif
           
-! NEW PHOTON DIRECTION
+! NEW PHOTON DIRECTION adapting Yu A. Shreider (1966) pgs 151-153 
+
+! for ethese equations we really need scattering angle not phase angle 
+		  cosalp = cos(pi-alp)
+		  sinalp = sin(pi-alp)
+
 
            if (eold(3) * eold(3) >= 1.d0) then
-              e(1) = sine * cospsi
-              e(2) = sine * sinpsi
-              e(3) = eold(3) * cose
+              e(1) = sinalp * cospsi
+              e(2) = sinalp * sinpsi
+              e(3) = eold(3) * cosalp
            else
               root2 = 1.d0  -  eold(3) * eold(3)
               root = sqrt(root2)
-              e(3) = eold(3) * cose  +  sine * cospsi * root
-              e(1) = (eold(1)*(cose - eold(3)*e(3))  -  &
-                   & sine * sinpsi * eold(2) * root) / root2
-              e(2) = (eold(2)*(cose - eold(3)*e(3))  +  & 
-                   & sine * sinpsi * eold(1) * root) / root2             
+              e(3) = eold(3) * cosalp  +  sinalp * cospsi * root
+              e(1) = (eold(1)*(cosalp - eold(3)*e(3))  -  &
+                   & sinalp * sinpsi * eold(2) * root) / root2
+              e(2) = (eold(2)*(cosalp - eold(3)*e(3))  +  & 
+                   & sinalp * sinpsi * eold(1) * root) / root2             
            end if
 
            if (idebug == 1) then
@@ -2747,7 +2768,7 @@ subroutine scatter_phot (p,e,inext,tnext)
               write(30,*)'new direction e = ',e(1:3)
               close(30)
            endif
-           
+        
            enew = e
            enew2 = dot_product(enew,enew)
            enew = enew / sqrt(enew2)
@@ -3219,12 +3240,10 @@ subroutine which_part_next (p,e,inext,tnext,nscatter)
                     t = -(b + sqrt(temp))/ (2.0d0 * a)
 
 ! IF THIS IS THE EARLIEST COLLISION SO FAR, SAVE TIME AND PARTICLE INDEX
-! EXCEPT IF CURRENT PARTICLE
               
                     if (t < tnext) then
                        inext = iparticle
                        tnext = t
-!                       hit = .true.
                     endif
                  endif
 
@@ -3251,8 +3270,6 @@ subroutine which_part_next (p,e,inext,tnext,nscatter)
 ! IF CALCULATING THE PHOTON PATH BETWEEN PARTICLE AND OBSERVER TO LOOK FOR 
 ! OBSTACLES (CALLED FROM FLUX_TO_OBS), THEN HIT HAS ALREADY OCCURRED.  
 ! DO NOT MAKE GHOST PHOTON.  RETURN TO FLUX_TO_OBS
-
-!  if (hit) return
 
 ! CHECK WHETHER PHOTON HAS LEFT THE RING PLANE
 ! IF SO, GO TO NEXT PHOTON
@@ -3299,6 +3316,8 @@ function eval_func (x)
   include 'mpif.h'  
 
   real*8 :: x,eval_func,y
+  real*8 :: stx2,talphx2 
+  
 
   if ((phasefunc == 3) .or. (phasefunc == 4)) then
 
@@ -3310,8 +3329,11 @@ function eval_func (x)
      eval_func = (pi - x)**expo * sin(x)
 
   else if (phasefunc == 8) then
+  
+     talphx2 = tan(x/2.d0)
+     stx2 = sqrt(talphx2)
     
-     eval_func = (sin(x)+(pi-x)*cos(x))*sin(x)
+     eval_func = exp(-1.0d0*steep*stx2)*((sin(x)+(pi-x)*cos(x))*sin(x))
   
   endif
 

@@ -1,7 +1,7 @@
 BEAM readme updated March 31, 2018
 
 BEAM is  a Monte Carlo (MC) based Radiative Transfer/Ray Tracing code 
-written in Fortran 90. In addition we include in this package a 
+written in Fortran 90. In addition, this package includes a 
 few utility scripts written in python and R that we have found useful
 for diagnostic purposes. The MC code has been run and tested on MacOS and Linux 
 systems (Pleiades at the NAS supercomputing facility).
@@ -12,7 +12,7 @@ raytracing. The two parts are decoupled to allow for using a particle
 field obtained some other way.
 
 prerequisites:
-
+------------------------------------------------------------------------
 gnu fortran,
 
 If running BEAM on a Mac:
@@ -66,7 +66,8 @@ to load are,
 
 These seem to work but newer versions "should" work fine too. 
 
-This package contains
+Contents of package:
+------------------------------------------------------------------------
 
 	README.txt 
 	   -this file
@@ -87,7 +88,7 @@ This package contains
 	source
 	   Fortran source code
 		   make_particles_wakes.F90 
-			  -original particle set up code. Contain only 
+			  -original particle set up code. Contains only 
 			  a moderate capability to ensure particles do not overlap.
 			  Works well with low D and tau (density less 
 			  then ~ 0.1, tau less then about 1.0) and narrow size 
@@ -215,8 +216,8 @@ This package contains
                  D=0.1, tau = 1.0, rmin = 5 cm, and rmax = 500 cm. 
                  The wake orientation is at 30.0 degrees.
         				
-Compiling code,
-
+Compiling code:
+------------------------------------------------------------------------
     cd into source directory
     
     particle code should be compiled as,
@@ -248,13 +249,11 @@ Compiling code,
       if you use a different version of the sgi/mpt library you will 
       have to change the compile statement accordingly.
       
-Running the model,
-
-    First run the setup code so the steps below assume you are have cd'd 
-    into that directory,
-       
-      I prefer to run from output directory
-      
+Running the model
+------------------------------------------------------------------------
+    First run the setup code, the steps below assume you are have cd'd 
+    into the output directory,
+             
       type,
       
       >../bin/wakex < ../input/part-no_wakesD01tau10_nbins40.in > output_particles
@@ -266,6 +265,17 @@ Running the model,
       geometrically spaced bins (this example has 40 bins). The physical parameters are 
       tau - 1.0 and D = 0.1. After running you should see a file called:
       nowakes_D01_tau10_nbins40.partdat. This will be used by mcx
+      
+      **** Actual tau and D ****************************************************
+      A bit of caution here the actual particle field generated will generally 
+      have a tau then the input tau. How much depends on the number of size bins 
+      used. The same is true of D. I find with 40 bins tau is off by 2% and D is 
+      off by 7-8%. If you want to validate the results of BEAM with classical 
+      results or compare with other models you will want to measure the tau and D 
+      in the particle file. You may find the script measureTau.py useful for this. 
+      However, be aware that because, in rare cases, there are particles whose z 
+      coordinates are outliers the calculated D values are misleading. 
+      **************************************************************************
       
       Running mcx (the serial version),
       
@@ -288,9 +298,12 @@ Running the model,
       
       Four files are generated,
       
-      flux.out - a table of flux due to orders of scattering from solar photons and satshine 
+      flux.out - a table of flux due to orders of scattering from solar photons 
+                 and satshine 
+                 
       if.out - tabulation of I/F as a function of single scattering albedo
-      nphotpass.out - a file that is useful for understanding output in some cases. It reports 6 numbers;
+      nphotpass.out - a file that is useful for understanding output in 
+                      some cases. It reports 6 numbers;
           * Total number of photons that pass through without hitting any particles 
           * Satshine photons that that did not interact
           * Solar photons that did not interact
@@ -301,8 +314,8 @@ Running the model,
       
       Running mc_mpix (the parallel version),
       
-      Most higher end Macs have 2 to 8 cores so the parallel version can be run locally by first 
-      linking the input file to a hardcoded filename,
+      Most higher end Macs have 2 to 8 cores so the parallel version can 
+      be run locally by first linking the input file to a hardcoded filename,
          
          >ln -s ../input/mc-mc-beamS0Phase20sha100tau10D01LitGeom.in input_file.in      
       
@@ -312,8 +325,8 @@ Running the model,
          
       generates same files as serial version   
 
-running the model on Pleidies,
-
+running the model on Pleidies
+------------------------------------------------------------------------
       As aluded to above, to speed up execution time we converted the serial 
       version to a MPI version that splits up a large number of 
       photons among multiple processors. Also we found averaging runs 
@@ -324,8 +337,8 @@ running the model on Pleidies,
       The beginning of the code has some shell variable declarations used 
       form input filenames and output directories. 
       
-      So after compiling both codes on NAS one can execute the sample pbs script in the root 
-      directory as,
+      So after compiling both codes on NAS one can execute the sample pbs 
+      script in the root directory as,
       
       >qsub -q normal run_mpi4_S0tau10D01Phase20sha45Ntarg300.pbs
       
@@ -341,8 +354,8 @@ running the model on Pleidies,
       with seperate results for each target as well as averaged results in flux_sum.out 
       and if_sum.out. 
       
-running shell script,
-
+Shell script      
+------------------------------------------------------------------------
       We also provide a shell script that does the same thing as the PBS script
       but uses the serial version of the code rather then the mpi version. 
       While in the BASH shell (the script is written using BASH commands) 
