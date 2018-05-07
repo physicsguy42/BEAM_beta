@@ -1,4 +1,4 @@
-BEAM readme updated March 31, 2018
+BEAM readme updated May 8, 2018
 
 BEAM is  a Monte Carlo (MC) based Radiative Transfer/Ray Tracing code 
 written in Fortran 90. In addition, this package includes a 
