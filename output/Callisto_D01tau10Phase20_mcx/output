@@ -18,7 +18,7 @@
  Number of particles:        43329
  xmin,xmax:   -2799.4031517446178        2799.4031517446178     
  ymin,ymax:   -2799.4031517446178        2799.4031517446178     
- zmin,zmax:   -1564.0542986600556        1498.2903915233219     
+ zmin,zmax:   -1731.2447816609747        1593.0862747778071     
  Initialize grid set-up for ring partcles..
  Enter ID nbr for particle phase function :
  3 = Power-law spherical phase function for Callisto (n=3.301)
@@ -28,9 +28,7 @@
  8 = Shadowed-Lambert point particle phase function
  these number codes are adopted for historical reasons
  Solar photons on? 0 = off, 1 = on, default = 1
- solarswitch =            1
  Saturnshine? 0 = off, 1 = on, default = 0
- satswitch =            1
  Enter nbr of Saturnshine photons:
  Enter nbr of lat/long grids on facing Saturn hemisphere:
  (min should be 10 x 10)

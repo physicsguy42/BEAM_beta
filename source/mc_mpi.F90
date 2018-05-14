@@ -15,7 +15,7 @@
 !  mpif90 -O3 mc_mpi.F90 -o mc_mpix 
 ! 
 ! on pliedies compile with,
-!  gfortran -O3 -I/nasa/sgi/mpt/2.12r26/include -o mc_mpix mc_mpi.F90 -lmpi
+!  gfortran -O3 -I/nasa/sgi/mpt/2.15r20/include -o mc_mpix mc_mpi.F90 -lmpi
 
 !Chages by D. Olson
 !  Changed seed for ran1 so that it will be different everytime code is run
@@ -166,8 +166,9 @@ module variables
   real*8 :: weight(nscatter_max) ! WEIGHT OF PHOTON AFTER SCATTERING
   integer :: time_temp
   real*8 :: frac_temp
-  logical :: iflag
-  integer :: numrejects  ! number of rejected photons by <n,esun> criteria
+  logical :: iflag  
+  integer :: numrejects,rejectrcv  ! number of scattering events blocked by <n,esun> criteria  
+  integer :: numObstructed,numObstructrcv ! number of cases where flux is blocked by a particle 
   character*20 :: ftestfile   ! file that records the flux from each mpi process for testing
   character*20 :: photcount
   integer :: intnlPhotons  ! count internal photons
@@ -184,8 +185,6 @@ module variables
   integer rank, nproc, comm, ierror, upper, lower
   real*8 :: start, finish
   integer :: id 
-
-  logical :: hit = .false.
 
   type cellstruct ! CELL INFO FOR UNIFORM GRID
      integer :: mu_count
@@ -208,7 +207,6 @@ use variables
 include 'mpif.h'
 
 comm = MPI_COMM_WORLD  ! default communicator setup for MPI_Init()
-
 
 call MPI_INIT(ierror)
 ! Below each processor finds out what what rank it is
@@ -237,15 +235,19 @@ if (solarswitch == 1) then
       call MPI_REDUCE(flux, fluxrcv,20, MPI_REAL8, MPI_SUM,0, comm,ierror)
       flux = fluxrcv
 endif
-! combine number of photons that pass without scattering from all rannks
+! combine number of photons that pass through without scattering from all ranks
 call MPI_REDUCE(nphotpass, passrcv,1, MPI_INT, MPI_SUM,0, comm,ierror)
 call MPI_REDUCE(nphotpassSolar, solarpassrcv,1, MPI_INT, MPI_SUM,0, comm,ierror)
 call MPI_REDUCE(nphotpassSat, satpassrcv,1, MPI_INT, MPI_SUM,0, comm,ierror)
-call MPI_REDUCE(numrejects, rejectrcv,1, MPI_INT, MPI_SUM,0, comm,ierror)
 nphotpass = passrcv
 nphotpassSolar = solarpassrcv
 nphotpassSat = satpassrcv
-numrejects = rejectrcv   
+
+! combine number of scattering events that result in flux not seen by observer
+call MPI_REDUCE(numrejects, rejectrcv,1, MPI_INT, MPI_SUM,0, comm,ierror)
+call MPI_REDUCE(numObstructed, numObstructrcv,1, MPI_INT, MPI_SUM,0, comm,ierror)
+numrejects = rejectrcv
+numObstructed = numObstructrcv
    
 ! combine number of photons that are used to calculate flux
 
@@ -257,6 +259,7 @@ numfluxSat = numSatrcv
 if (rank==0) call output ()
 
 call MPI_FINALIZE(ierror)  ! Clean everything up 
+write(25,*) 'ierror = ', ierror
 
 close(15)
 close(25)
@@ -395,7 +398,6 @@ subroutine albedo()
         apf(imu0) = apf1(imu0,iSteep)
      enddo
 
-
   elseif (  k .eq. k2) then ! it's highly unlikely we will use a k>= 1.15
      do imu0 = 1,nmu0           ! but just in case we include this one
         apf(imu0) = apf2(imu0,iSteep)
@@ -415,6 +417,9 @@ end subroutine albedo
 ! July 19, 2017
 !     corrected typo in Minnert scattering law. Was only giving Lambert result 
 !     no matter the value of k -DMO
+! April 30, 2018
+!      Fixed photon blocking conditions so that we get the correct 
+!      Flux when using particle phase functions.
 !--------------------------------------------------------------------
 
 subroutine flux_to_obs (p,e,inow,nscatter,iphot)
@@ -491,7 +496,7 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
 
   mu = dot_product(n,e_obs)
   if(phasefunc == 6 .or. phasefunc == 7) then
-    if (mu < 0) then
+    if (mu < 0) then 
       numrejects = numrejects +1
       return
      endif    
@@ -524,6 +529,7 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
         write (30,*) 'scattering pt hidden from observer'
         close(30)
      endif
+     numObstructed = numObstructed + 1
      return
   endif
 
@@ -1069,6 +1075,7 @@ subroutine initialize ()
   zmin = 0.0d0
   iflag = .true.
   numrejects = 0
+  numObstructed = 0
   intnlPhotons = 0
   numfluxSat = 0
   numfluxSolar = 0
@@ -1280,6 +1287,8 @@ subroutine input ()
 
   read(15,*)phasefunc
   
+  write(25,*) 'phasefunc = ', phasefunc
+  
 ! FOR CALLISTO PHASE FUNCTION, SET THE EXPONENT N = 3.301, BEST FIT FOR 
 ! POWER-LAW TO CALLISTO FROM DONES ET AL. 1993, AND INITIALIZE LOOK-UP
 ! TABLE FOR NEW SCATTERING DIRECTION
@@ -1309,24 +1318,23 @@ subroutine input ()
   end if
 
   if (phasefunc == 6) then
-     if(rank==0) write(25,*)'Enter Minnaert parameter k to use:'
+     write(25,*)'Enter Minnaert parameter k to use:'
      read(15,*)k
-     if(rank==0) write(25,*)'Enter steepness parameter to use:'
+     write(25,*)'Enter steepness parameter to use:'
      read(15,*)steep
 
   end if
 
   if (phasefunc == 7) then
      write(25,*)'Enter steepness parameter to use:'
-     read(*,*)steep
+     read(15,*)steep
 
   end if
 
   if (phasefunc == 8) then
      write(25,*)'Enter steepness parameter to use:'
-     read(*,*)steep
+     read(15,*)steep
      call init_power()
-
   end if
 
 ! SOLAR PHOTON SWITCH - DEFAULT IS ON - CAN TURN OFF TO SEE JUST EFFECTS
@@ -1342,7 +1350,6 @@ subroutine input ()
   read(15,*) satswitch
   if (rank==0) write(25,*) 'satswitch = ', satswitch
   
-
   if (satswitch == 1) then
      if(rank==0) write(25,*) 'Enter nbr of Saturnshine photons:'
      read(15,*) nphotsat
@@ -1608,8 +1615,9 @@ subroutine output ()
   write(60,*) 'nbr of noninteracting Satshine photons : ', nphotpassSat  
   write(60,*) 'nbr of noninteracting Solar photons : ', nphotpassSolar    
   write(60,*) 'nbr of Satshine photons used for flux: ', numfluxSat
-  write(60,*) 'nbr of Solar photons used for flux: ', numfluxSolar  
-  write(60,*) 'number of blocked scattering events : ', numrejects
+  write(60,*) 'nbr of Solar photons used for flux: ', numfluxSolar
+  write(60,*) 'number of self blocked scattering events : ', numrejects
+  write(60,*) 'number of scattering events hidden by another particle : ',numObstructed
 
   close(60)
   return
@@ -2743,7 +2751,7 @@ subroutine scatter_phot (p,e,inext,tnext,nscatter)
           
 ! NEW PHOTON DIRECTION adapting Yu A. Shreider (1966) pgs 151-153 
 
-! for ethese equations we really need scattering angle not phase angle 
+! for these equations we really need scattering angle not phase angle 
 		  cosalp = cos(pi-alp)
 		  sinalp = sin(pi-alp)
 
@@ -3195,14 +3203,14 @@ subroutine which_part_next (p,e,inext,tnext,nscatter)
                 & deltacrit*deltacrit
            temp = b * b - 4.0d0 * a * c
            
-!        if (idebug == 1) then
-!           open (30, file='debug.out', access='append')
-!           write (30,*)'rbox:',rbox(1:3,ix,iy,iz)
-!           write (30,*)'p:',p(1:3)
-!           write (30,*)'e:',e(1:3)
-!           write (30,*)'pminusr:',pminusr(1:3)
-!           close(30)
-!        endif
+       if (idebug == 1) then
+          open (30, file='debug.out', access='append')
+          write (30,*)'rbox:',rbox(1:3,ix,iy,iz)
+          write (30,*)'p:',p(1:3)
+          write (30,*)'e:',e(1:3)
+          write (30,*)'pminusr:',pminusr(1:3)
+          close(30)
+       endif
 
 ! IF PHOTON PASSES THROUGH THIS GRID BOX
      

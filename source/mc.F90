@@ -31,8 +31,8 @@
 !
 ! March 6,2018
 !      Added Shadowed Lambert point particle phase function option. 
-!      This is mainly for consistancy checks.
-!
+!      This is mainly for consistancy checks with the facet scattering.
+!      
 !--------------------------------------------------------------------
 
 
@@ -148,7 +148,8 @@ module variables
   integer :: time_temp
   real*8 :: frac_temp
   logical :: iflag  
-  integer :: numrejects  ! number of rejected photons by <n,esun> criteria  
+  integer :: numrejects  ! number of scattering events blocked by <n,esun> criteria  
+  integer :: numObstructed ! number of cases where flux is blocked by a particle 
   character*20 :: ftestfile   ! file that records the flux from each mpi process for testing
   character*20 :: photcount
   integer :: intnlPhotons  ! count internal photons
@@ -156,8 +157,6 @@ module variables
   real*8 :: c_S(11) ! normalization constants for lambert
   integer :: ishad
   
-
-  logical :: hit = .false.
 
   type cellstruct ! CELL INFO FOR UNIFORM GRID
      integer :: mu_count
@@ -384,7 +383,9 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
      endif    
   endif   
   
-  dmu0 = 1.0d0/dble(nmu0-1)
+  dmu0 = 1.0d0/dble(nmu0-1) !grid scacing in mu0, used to get correct value 
+                            !of apf for weighting in case of facet 
+                            ! (aka surface element) scattering. 
 
   if (idebug == 1) then
      open (30, file='debug.out', access='append')
@@ -449,6 +450,7 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
         write (30,*) 'scattering pt hidden from observer'
         close(30)
      endif
+     numObstructed = numObstructed + 1
      return
   endif
 
@@ -620,8 +622,9 @@ subroutine flux_to_obs (p,e,inow,nscatter,iphot)
         fluxsat(nscatter) = fluxsat(nscatter) + sf
      else
         flux(nscatter) = flux(nscatter) + sf
-     end if
-   end if  
+     endif
+  endif
+  
      if (idebug == 1) then
         open (30, file='debug.out', access='append')
         write(30,*)'nscatter=',nscatter
@@ -987,6 +990,7 @@ subroutine initialize ()
   zmin = 0.0d0
   iflag = .true.
   numrejects = 0
+  numObstructed = 0
   intnlPhotons = 0
   numfluxSat = 0
   numfluxSolar = 0
@@ -1141,7 +1145,7 @@ subroutine input ()
      write (*,'(/,a)') 'File not found. Check the file name and path.'
   end do
   
-  open(10,file=infile,status='old')
+  open(10,file=infile,status='old',iostat=status)
 
   read(10,*)ctemp ! CONTAINS FILE PATH AND NAME
   read(10,*)xmax,ymax
@@ -1235,7 +1239,6 @@ subroutine input ()
      write(*,*)'Enter steepness parameter to use:'
      read(*,*)steep
      call init_power()
-
   end if
 
 ! SOLAR PHOTON SWITCH - DEFAULT IS ON - CAN TURN OFF TO SEE JUST EFFECTS
@@ -1512,7 +1515,8 @@ subroutine output ()
   write(60,*) 'nbr of noninteracting Solar photons : ', nphotpassSolar    
   write(60,*) 'nbr of Satshine photons used for flux: ', numfluxSat
   write(60,*) 'nbr of Solar photons used for flux: ', numfluxSolar  
-  write(60,*) 'number of blocked scattering events : ', numrejects
+  write(60,*) 'number of self blocked scattering events : ', numrejects
+  write(60,*) 'number of scattering events hidden by another particle : ',numObstructed
 
   close(60)
   return

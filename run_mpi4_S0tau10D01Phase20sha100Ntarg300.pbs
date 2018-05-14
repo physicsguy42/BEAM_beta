@@ -6,16 +6,16 @@
 # ensure we get enough wall time 
 
 #PBS -l select=1:ncpus=28:model=bro
-#PBS -l walltime=08:00:00
+#PBS -l walltime=02:00:00
 #PBS -j oe
 #PBS -W group_list=g26171
 #PBS -m e
 
 # Load gcc, MPI compiler, and python interpreter
 
-module load gcc/4.9.3
+module load gcc
 module load mpi-sgi/mpt.2.15r20  # most current version of sgi mpt
-module load python/2.7.12         # load python 2.7 interpreter
+module load python         # load python 2.7 interpreter
 
 # before running script 
 # compile beam code with gfortran

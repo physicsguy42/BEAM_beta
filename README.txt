@@ -60,9 +60,9 @@ If running BEAM on Pleiades you will you will have to load the modules
 you need to compile and run the code. As of this writing the modules 
 to load are,
      
-     >module load gcc/4.9.4
+     >module load gcc/4.9.3
      >module load mpi-sgi/mpt.2.15r20 
-     >module load python/2.7.12       
+     >module load python
 
 These seem to work but newer versions "should" work fine too. 
 
@@ -235,7 +235,7 @@ Compiling code:
       
     the MPI (parallel) version can be compiled on MacOS as,
     
-      > mpifort mc_mpi.F90 -o ../bin/mc_mpix
+      > mpifort -O3 mc_mpi.F90 -o ../bin/mc_mpix
     
     On NAS you will need to load a couple of modules first. As of 
     this writing they are,
@@ -309,7 +309,11 @@ Running the model
           * Solar photons that did not interact
           * Satshine photons used to compute flux
           * Solar photons used to compute flux 
-          * Number of photons that would result in flux not seen by the observer.
+          * Number of scattering events that result in flux not seen by the observer
+            due to the scattering particle being in the way.
+          * Number of scattering events that result in flux not seen by the observer
+            because of another particle being in the way.
+          
       output - contains messages related to progress of program run    
       
       Running mc_mpix (the parallel version),
@@ -317,7 +321,8 @@ Running the model
       Most higher end Macs have 2 to 8 cores so the parallel version can 
       be run locally by first linking the input file to a hardcoded filename,
          
-         >ln -s ../input/mc-mc-beamS0Phase20sha100tau10D01LitGeom.in input_file.in      
+         >ln -s ../input/mc-beamS0Phase20sha100tau10D01LitGeom.in input_file.in  
+         
       
       and then (if you have four cores) execute the code as,
       

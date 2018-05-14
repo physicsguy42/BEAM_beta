@@ -1,24 +1,27 @@
- part file = nowakes_D01_tau10_nbins40.partdat                                                                                                                                                                       
-           0       10000  0.46600291028248553       0.72780229808163477       0.34906585039886556        1.7453292519943278        0.0000000000000000     
- Enter ID nbr for particle phase function :
+ Enter ID nbr for particle  input variables
  3 = Power-law spherical phase function for Callisto (n=3.301)
  4 = Power-law spherical phase function for Europa
  6 = Shadowed-Minnaert surface reflection law - John table
  7 = Shadowed-Lambert surface reflection law
  8 = Shadowed-Lambert point particle phase function
  these number codes are adopted for historical reasons
- k, S =    1.0000000000000000        0.0000000000000000     
+ phasefunc =            6
+ Enter Minnaert parameter k to use:
+ Enter steepness parameter to use:
  What phase func for Saturn?
  1 = Barkstrom Law with tabulated A & B
  2 = Barkstrom Law with user-chosen A & B
  3 = Minnaert
  Barkstrom A ~ Saturn albedo
  Barkstrom B ~ amount of backscatter
-  2799.4031517446178     
+ ierror =            0
+ng particle positions
+ part file = nowakes_D01_tau10_nbins40.partdat                                                                                                                                                                       
+ Number of particles:        43329
+ xmin,xmax:   -2799.4031517446178        2799.4031517446178     
  ymin,ymax:   -2799.4031517446178        2799.4031517446178     
- zmin,zmax:   -1564.0542986600556        1498.2903915233219     
+ zmin,zmax:   -1731.2447816609747        1593.0862747778071     
  Initialize grid set-up for ring partcles..
-           0       10000  0.46600291028248553       0.72780229808163477       0.34906585039886556        1.7453292519943278        0.0000000000000000     
  Enter ID nbr for particle phase function :
  3 = Power-law spherical phase function for Callisto (n=3.301)
  4 = Power-law spherical phase function for Europa
@@ -26,9 +29,9 @@
  7 = Shadowed-Lambert surface reflection law
  8 = Shadowed-Lambert point particle phase function
  these number codes are adopted for historical reasons
+ phasefunc =            6
  Enter Minnaert parameter k to use:
  Enter steepness parameter to use:
- k, S =    1.0000000000000000        0.0000000000000000     
  Solar photons on? 0 = off, 1 = on, default = 1
  solarswitch =            1
  Saturnshine? 0 = off, 1 = on, default = 0
@@ -47,10 +50,55 @@
  Total sat photons:   168.12553935111006     
  Begin ray tracing of SATSHINE photons...
  lower, upper :            1        5000
+ Satshine iphot =         100
+ Satshine iphot =         200
+ Satshine iphot =         300
+ Satshine iphot =         400
+ Satshine iphot =         500
+ Satshine iphot =         600
+ Satshine iphot =         700
+ Satshine iphot =         800
+ Satshine iphot =         900
  Satshine iphot =        1000
+ Satshine iphot =        1100
+ Satshine iphot =        1200
+ Satshine iphot =        1300
+ Satshine iphot =        1400
+ Satshine iphot =        1500
+ Satshine iphot =        1600
+ Satshine iphot =        1700
+ Satshine iphot =        1800
+ Satshine iphot =        1900
  Satshine iphot =        2000
+ Satshine iphot =        2100
+ Satshine iphot =        2200
+ Satshine iphot =        2300
+ Satshine iphot =        2400
+ Satshine iphot =        2500
+ Satshine iphot =        2600
+ Satshine iphot =        2700
+ Satshine iphot =        2800
+ Satshine iphot =        2900
  Satshine iphot =        3000
+ Satshine iphot =        3100
+ Satshine iphot =        3200
+ Satshine iphot =        3300
+ Satshine iphot =        3400
+ Satshine iphot =        3500
+ Satshine iphot =        3600
+ Satshine iphot =        3700
+ Satshine iphot =        3800
+ Satshine iphot =        3900
  Satshine iphot =        4000
+ Satshine iphot =        4100
+ Satshine iphot =        4200
+ Satshine iphot =        4300
+ Satshine iphot =        4400
+ Satshine iphot =        4500
+ Satshine iphot =        4600
+ Satshine iphot =        4700
+ Satshine iphot =        4800
+ Satshine iphot =        4900
  Satshine iphot =        5000
  Begin ray tracing of SOLAR photons...
  nphot =        10000
@@ -104,3 +152,4 @@
  Solar iphot =        4800
  Solar iphot =        4900
  Solar iphot =        5000
+ ierror =            0
