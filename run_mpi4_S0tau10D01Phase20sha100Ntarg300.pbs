@@ -6,7 +6,7 @@
 # ensure we get enough wall time 
 
 #PBS -l select=1:ncpus=28:model=bro
-#PBS -l walltime=02:00:00
+#PBS -l walltime=08:00:00
 #PBS -j oe
 #PBS -W group_list=g26171
 #PBS -m e

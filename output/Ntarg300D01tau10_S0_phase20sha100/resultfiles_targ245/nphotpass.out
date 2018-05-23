@@ -1,7 +1,8 @@
  nbr of photons that pass through rings without scattering off of any ring particles:
- total:         1634
- nbr of noninteracting Satshine photons :          712
- nbr of noninteracting Solar photons :          922
- nbr of Satshine photons used for flux:         9284
- nbr of Solar photons used for flux:         9074
- number of rejected photons :            0
+ total:         1810
+ nbr of noninteracting Satshine photons :          788
+ nbr of noninteracting Solar photons :         1022
+ nbr of Satshine photons used for flux:         9208
+ nbr of Solar photons used for flux:         8974
+ number of self blocked scattering events :        17370
+ number of scattering events hidden by another particle :        11335

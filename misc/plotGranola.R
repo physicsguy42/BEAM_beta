@@ -1,7 +1,7 @@
 # Script to generate 3d plot of particle field
 rm(list=ls()) # clear workspace
 library(rgl)
-myframe = read.table("/NASA2013/Radiative_transfer/Beam07292014/BEAM_beta3/BEAM_tau10D001S10Phase111SHA100Rev3/nowakes_D001_tau10_nbins40.partdat",skip=3)
+myframe = read.table("/NASA2013/Radiative_transfer/Beam07292014/BEAM_beta4a/nowakes_D01_tau10_nbins40.partdat",skip=3)
 mymatrix<-as.matrix(myframe,rownames.force = NA)
 cat("number of rows is ", nrow(mymatrix))
 npart = nrow(mymatrix)
